@@ -24,4 +24,3 @@ If an output name isn't provided, it'll default to using `./results/<input_filen
 
 # Known Issues
 * Noses don't consistently match the reference image
-* Completed OBJ is rotated
