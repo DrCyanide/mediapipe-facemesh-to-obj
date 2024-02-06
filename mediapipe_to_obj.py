@@ -251,7 +251,20 @@ def main():
             refine_landmarks=True,
             max_num_faces=1,
             min_detection_confidence=0.5) as face_mesh:
-        results = face_mesh.process(img)
+        try:
+            results = face_mesh.process(img)
+        except ValueError as e:
+            # PNG was probaly provided, try to convert to JPG
+            try:
+                tmp_path = 'converted.jpg'
+                cv2_img = cv2.imread(img_path)
+                cv2.imwrite(tmp_path, cv2_img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+                img_ori = skimage.io.imread(tmp_path)
+                img = img_ori
+                results = face_mesh.process(img)
+                
+            except:
+                raise Exception('Unable to use a PNG, and unable to automatically convert PNG to JPG')
 
     assert len(results.multi_face_landmarks)==1 
 
